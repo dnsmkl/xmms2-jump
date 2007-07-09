@@ -6,7 +6,7 @@ XMMS2 client that provides only this feature. It is intended to be bound to an
 accelerator key so you can quickly start the program, search, and get back to
 what you were doing.
 
-This is xmms2_jump version 0.02.
+This is xmms2_jump version 0.03.
 It is somewhere between alpha and beta quality, I hope.
 
 For more detailed information about xmms2_jump, please see
@@ -17,12 +17,15 @@ To contact the author, email dreiss.xmms2@gmail.com
 INSTALLATION
 
 xmms2_jump requires the following packages:
-SCons, GCC (with g++), Boost, gtkmm, ncurses, and XMMS2.
+GCC (with g++), Make, Boost, and XMMS2.
+In addition, at least one of gtkmm and ncurses is required
 Please see http://code.google.com/p/xmms2-jump/wiki/Dependencies
 for more details.
 
-Just run scons to compile.  Please report any compilation failures on the wiki,
+Just run make to compile.  Please report any compilation failures on the wiki,
 and *please* include the version numbers you have for all of those libraries.
+To compile without the gtk client, run "make WITHOUT_GTK=1".
+To compile without the curses client, run "make WITHOUT_CURSES=1".
 
 To install, copy xmms2_jump-makedb, xmms2_jump-query-gtk, and
 xmms2_jump-query-curses to somewhere in your path.  Copy (or link)
@@ -41,4 +44,7 @@ LIMITATIONS
 I have only tested this program with "list" style playlists, not "queue" or
 "pshuffle".  You can try them if you want, but I make no promises.
 
-The curses user interface does not support scrolling yet.
+Only searching the playlist is supported, not the entire medialib (yet).
+
+On my computer, the gtk client gets too slow once the playlist is over
+about 2000 songs.  The ncurses client is fine for at least 4000.
