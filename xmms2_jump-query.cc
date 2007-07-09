@@ -69,6 +69,7 @@ void IndexSearcher::ItemSelected(int position) {
 		client_.connect(std::getenv("XMMS_PATH"));
 		client_.playlist.setNext(position);
 		client_.playback.tickle();
+		client_.playback.start();
 	} catch (std::exception& e) {
 		std::cerr << "Error selecting track: "
 		          << e.what() << std::endl;
