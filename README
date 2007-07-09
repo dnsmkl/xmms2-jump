@@ -6,9 +6,6 @@ XMMS2 client that provides only this feature. It is intended to be bound to an
 accelerator key so you can quickly start the program, search, and get back to
 what you were doing.
 
-This is xmms2_jump version 0.03.
-It is somewhere between alpha and beta quality, I hope.
-
 For more detailed information about xmms2_jump, please see
 http://code.google.com/p/xmms2-jump/
 To contact the author, email dreiss.xmms2@gmail.com
