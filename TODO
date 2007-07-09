@@ -1,0 +1,5 @@
+various optimizations:
+	stringpiece
+	coll_get_infos
+	other uis
+	mult-delete off
