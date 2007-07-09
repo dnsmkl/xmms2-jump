@@ -46,7 +46,11 @@ static void sigint(int sig) {
 class CursesGui : public Frontend
 {
 public:
-	CursesGui() : xpos_(0), ypos_(2) {}
+	CursesGui()
+		: cursor_pos_(0)
+		, select_offset_(0)
+		, screen_offset_(0)
+	{}
 
 	virtual void AddEntry(int position, strref name);
 	virtual void Display();
@@ -58,11 +62,14 @@ private:
 	void UpdateCount();
 	void DisplayNames();
 
+	static const int header_size = 2;
 
 	unordered_map<int,string> names_;
 	vector<int> const* survivors_;
 	string list_size_;
-	int xpos_, ypos_;  // XXX rename, ace.
+	int cursor_pos_;
+	int select_offset_;
+	int screen_offset_;
 };
 
 
@@ -84,15 +91,19 @@ void CursesGui::Display() {
 	while (true) {
 		UpdateCount();
 		DisplayNames();
+		// TODO: Avoid full DisplayNames when we just move the selection.
+		// Unfortunately, it is so darn fast as is that I'm not motivated.
 
-		int c = mvgetch(0, xpos_);
+		int c = mvgetch(0, cursor_pos_);
 		//endwin();
 		//std::cerr << c << std::endl;
 		//return;
 		if ( c < 0x100 && std::isprint(c)) {
-			xpos_++;
+			cursor_pos_++;
 			addch(c);
 			survivors_ = &(AddChar((char)c));
+			select_offset_ = 0;
+			screen_offset_ = 0;
 			continue;
 		}
 
@@ -100,27 +111,51 @@ void CursesGui::Display() {
 			case KEY_BACKSPACE:
 			case KEY_DC:
 			case 0x7f:
-				if (xpos_ > 0) {
-					xpos_--;
-					move(0, xpos_);
+				if (cursor_pos_ > 0) {
+					cursor_pos_--;
+					move(0, cursor_pos_);
 					delch();
 					survivors_ = &(PopChar());
+					select_offset_ = 0;
+					screen_offset_ = 0;
 				}
 			break;
 			case KEY_DOWN:
-				ypos_++;
-				DisplayNames();  // XXX be more efficient.
+				select_offset_++;
+				if (select_offset_ >= (int)survivors_->size())
+					select_offset_ = survivors_->size() - 1;
+				if (select_offset_ - screen_offset_ >= LINES - header_size)
+					screen_offset_++;
 			break;
 			case KEY_UP:
-				ypos_--;
-				if (ypos_ < 2) ypos_ = 2;
-				DisplayNames();  // XXX be more efficient.
+				select_offset_--;
+				if (select_offset_ < 0)
+					select_offset_ = 0;
+				if (select_offset_ < screen_offset_)
+					screen_offset_--;
+			break;
+			case KEY_NPAGE /* Page Down*/ :
+				select_offset_ += LINES - header_size - 1;
+				if (select_offset_ >= (int)survivors_->size())
+					select_offset_ = survivors_->size() - 1;
+				if (select_offset_ - screen_offset_ >= LINES - header_size)
+					screen_offset_ = select_offset_ - LINES + header_size + 1;
+			break;
+			case KEY_PPAGE /* Page Up */:
+				select_offset_ -= LINES - header_size - 1;
+				if (select_offset_ < 0)
+					select_offset_ = 0;
+				if (select_offset_ < screen_offset_)
+					screen_offset_ = select_offset_;
 			break;
 			case KEY_ENTER:
 			case '\r':
 			case '\n':
 				endwin();
-				ItemSelected(survivors_->at(ypos_-2));
+				ItemSelected(survivors_->at(select_offset_));
+				return;
+			case '\033' /* ESC */:
+				endwin();
 				return;
 		}
 	}
@@ -165,20 +200,24 @@ void CursesGui::UpdateCount() {
 }
 
 void CursesGui::DisplayNames() {
-	int ypos = 2;
-	for ( vector<int>::const_iterator it = survivors_->begin() ;
-			it != survivors_->end() ; ++it ) {
-		if (ypos == LINES) break;
+	int yoff = 0;
 
-		if (ypos == ypos_) standout();
-		mvaddstr(ypos, 0, names_[*it].c_str());
-		if (ypos == ypos_) standend();
+	assert(screen_offset_ <= (int)survivors_->size());
 
-		++ypos;
+	// Skip over everything that is scrolled offscreen.
+	for ( vector<int>::const_iterator it = survivors_->begin()
+			+ screen_offset_ ; it != survivors_->end() ; ++it ) {
+		if (yoff + header_size == LINES) break;
+
+		if (yoff == select_offset_ - screen_offset_) standout();
+		mvaddstr(yoff + header_size, 0, names_[*it].c_str());
+		if (yoff == select_offset_ - screen_offset_) standend();
+
+		++yoff;
 	}
 
-	if (ypos != LINES) {
-		move(ypos, 0);
+	if (yoff + header_size != LINES) {
+		move(yoff + header_size, 0);
 		clrtobot();
 	}
 }
