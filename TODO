@@ -1,3 +1,5 @@
+ncurses scrolling
+search mlib
 various optimizations:
 	stringpiece
 	coll_get_infos

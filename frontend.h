@@ -40,6 +40,8 @@ public:
 protected:
 	void ItemSelected(int position);
 	const std::vector<int>& Search(strref text);
+	const std::vector<int>& AddChar(char ch);
+	const std::vector<int>& PopChar();
 
 	bool IsCharAppend(strref text);
 

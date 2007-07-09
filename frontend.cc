@@ -42,6 +42,16 @@ const std::vector<int>& Frontend::Search(strref text) {
 	}
 }
 
+const std::vector<int>& Frontend::AddChar(char ch) {
+	last_text_ += ch;
+	return searcher_->PushChar(ch);
+}
+
+const std::vector<int>& Frontend::PopChar() {
+	last_text_.erase(last_text_.length() - 1);
+	return searcher_->Search(last_text_);
+}
+
 void Frontend::SetSearcher(IndexSearcher* searcher) {
 	searcher_ = searcher;
 }

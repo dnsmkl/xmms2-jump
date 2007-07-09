@@ -75,8 +75,7 @@ private:
 };
 
 
-X2JWindow::X2JWindow()
-{
+X2JWindow::X2JWindow() {
 	set_border_width(5);
 	set_default_size(640, 480);
 

@@ -6,30 +6,34 @@ XMMS2 client that provides only this feature. It is intended to be bound to an
 accelerator key so you can quickly start the program, search, and get back to
 what you were doing.
 
-This is xmms2_jump version 0.01.  The first public release!
+This is xmms2_jump version 0.02.
 It is somewhere between alpha and beta quality, I hope.
+
+For more detailed information about xmms2_jump, please see
+http://code.google.com/p/xmms2-jump/
+To contact the author, email dreiss.xmms2@gmail.com
 
 
 INSTALLATION
 
 xmms2_jump requires the following packages:
-SCons, in order to build it (any version should be fine).
-GCC with C++ support.  A recent version of libstdc++ might be necessary.
-Boost.  Only tested with version 1.33.1.
-Gtkmm (2.4 API).  Only tested with version 2.8.3.
-XMMS2 (of course).  Only tested with DrJekyll.
+SCons, GCC (with g++), Boost, gtkmm, ncurses, and XMMS2.
+Please see http://code.google.com/p/xmms2-jump/wiki/Dependencies
+for more details.
 
 Just run scons to compile.  Please report any compilation failures on the wiki,
 and *please* include the version numbers you have for all of those libraries.
 
-To install, copy xmms2_jump-makedb and xmms2_jump-query to somewhere in your
-path.  Copy (or link) xmms2_jump-monitor into your XMMS2 startup directory
-(defaults to $HOME/.config/xmms2/startup.d) and restart XMMS2 (this will ensure
-that stale indexes are not used).  Then just run xmms2_jump-user_query.sh to
-start searching your currently active playlist.  It will take a little while to
-start up the first time (and the first time after you change your playlist)
-while it builds an index.  The index is stored in $XDG_CACHE_HOME/xmms2_jump (or
-$HOME/.cache/xmms2_jump, if XDG_CACHE_HOME is not set).
+To install, copy xmms2_jump-makedb, xmms2_jump-query-gtk, and
+xmms2_jump-query-curses to somewhere in your path.  Copy (or link)
+xmms2_jump-monitor into your XMMS2 startup directory (defaults to
+$HOME/.config/xmms2/startup.d) and restart XMMS2 (this will ensure that stale
+indexes are not used).  Then just run "xmms2_jump-user_query.sh gtk" or
+"xmms2_jump-user_query.sh curses" to start searching your currently active
+playlist.  It will take a little while to start up the first time (and the
+first time after you change your playlist) while it builds an index.  The index
+is stored in $XDG_CACHE_HOME/xmms2_jump (or $HOME/.cache/xmms2_jump, if
+XDG_CACHE_HOME is not set).
 
 
 LIMITATIONS
@@ -37,9 +41,4 @@ LIMITATIONS
 I have only tested this program with "list" style playlists, not "queue" or
 "pshuffle".  You can try them if you want, but I make no promises.
 
-
-CONTACT
-
-Please post any questions or comments on the wiki.  When I find a way to include
-my email here without getting spam, I'll update this file and post a new
-release.  Don't bother emailing my gmail account; I don't use it.
+The curses user interface does not support scrolling yet.

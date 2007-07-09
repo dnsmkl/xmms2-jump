@@ -17,7 +17,6 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-
 NAMES_FILE="names.dat"
 INDEX_FILE="index.dat"
 
@@ -29,8 +28,14 @@ fi
 MY_XDG_CACHE_HOME="${XDG_CACHE_HOME-${HOME}/.cache}"
 CACHE_DIR="$MY_XDG_CACHE_HOME/xmms2_jump"
 
+if [ "$1" != "curses" -a "$1" != "gtk" ] ; then
+	echo 1>&2 "usage: $0 <frontend>"
+	echo 1>&2 "    <frontend> can be \"curses\" or \"gtk\""
+	exit 2
+fi
+
 if [ -f "$CACHE_DIR/$NAMES_FILE" -a  -f "$CACHE_DIR/$INDEX_FILE" ] ; then
-	xmms2_jump-query
+	xmms2_jump-query-$1
 else
-	xmms2_jump-makedb && xmms2_jump-query
+	xmms2_jump-makedb && xmms2_jump-query-$1
 fi
