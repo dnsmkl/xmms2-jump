@@ -32,8 +32,7 @@ boost::filesystem::path cache_path() {
 		cpath = xdg_cache_home;
 	} else if ((home = std::getenv("HOME")) != NULL) {
 		cpath = home;
-		// TODO: Might not work with Boost 1.34
-		cpath /= path(".cache", boost::filesystem::native);
+		cpath /= ".cache";
 	} else {
 		cerr << "You must define XDG_CACHE_HOME or at least HOME." << endl;
 		std::exit(EXIT_FAILURE);

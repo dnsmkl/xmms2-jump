@@ -1,7 +1,7 @@
 CXXFLAGS += -Wall -Wextra -Werror
 #CXXFLAGS += -g
 CXXFLAGS += -O2
-LDLIBS   += -lboost_filesystem
+LDLIBS   += -lboost_filesystem-mt -lboost_system-mt
 
 CXXFLAGS += `pkg-config --cflags xmms2-client-cpp`
 LDLIBS   += `pkg-config --libs   xmms2-client-cpp`

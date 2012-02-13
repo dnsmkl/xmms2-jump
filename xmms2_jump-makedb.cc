@@ -144,11 +144,11 @@ private:
 
 void IndexBuilder::Load() {
 	client_.connect(std::getenv("XMMS_PATH"));
-
+	Xmms::List<int> entry_list = client_.playlist.listEntries();
 	int position = 0;
-	for ( Xmms::List<unsigned int> list = client_.playlist.listEntries() ;
-			list.isValid() ; ++list ) {
-		string name = FetchName(*list);
+	for (Xmms::List<int>::const_iterator entry = entry_list.begin();
+			entry != entry_list.end(); entry++ ) {
+		string name = FetchName(*entry);
 		string key = ExtractKey(name);
 		names_.push_back(name);
 		jumpdb_.AddEntry(position, key);
